@@ -59,6 +59,12 @@ def page(repo: str, number: int):
 
 os.makedirs("./docs", exist_ok=True)
 
+first = True
 for i in range(25, 38):
+    if first:
+        with open(f"./docs/index.html", "w") as f:
+            f.write(f'<!DOCTYPE html>\n<html><head><meta http-equiv="refresh" content="0;url={i:02d}.html" /></head></html>')
+
     with open(f"./docs/{i:02d}.html", "w") as f:
-        f.write(page('2024-05-26-27-rainier', i))
+        f.write(page('2024-10-20--Firn-Grad-Nakhonsawan', i))
+    first = False
