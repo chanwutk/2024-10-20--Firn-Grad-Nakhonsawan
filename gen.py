@@ -52,7 +52,7 @@ def page(repo: str, number: int, fr: int, to: int):
   </div>
   <div class="navigation-container">
     <a href="http://chanwutk.github.io/{repo}/{(_number-1):02d}" class="p-btn">prev</a>
-    {f'<a href="http://chanwutk.github.io/{repo}/{(_number-1):02d}" class="p-btn">prev</a>' if number < to else ''}
+    {f'<a href="http://chanwutk.github.io/{repo}/{(_number+1):02d}" class="p-btn">next</a>' if number < to else ''}
   </div>
   <div>
     Page {number - fr + 1} of {to - fr + 1}.
