@@ -68,10 +68,8 @@ def generate(fr: int, to: int):
         f.write('<!DOCTYPE html>\n<html><head><meta http-equiv="refresh" content="0;url=01.html" /></head></html>')
 
     for i in range(fr, to + 1):
-
         with open(f"./docs/{(i - fr + 1):02d}.html", "w") as f:
             f.write(page('2024-10-20--Firn-Grad-Nakhonsawan', i, fr, to))
-        first = False
 
 # TODO: Currently assume image number not overflowing 9999
 images = [f for f in os.listdir(".") if f.startswith("DSCF") and f.endswith(".JPG")]
