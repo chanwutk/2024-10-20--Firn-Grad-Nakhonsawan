@@ -1,7 +1,8 @@
 import os
 
 
-def page(repo: str, number: int):
+def page(repo: str, number: int, fr: int, to: int):
+    _number = number - fr + 1
     return f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -34,8 +35,8 @@ def page(repo: str, number: int):
 </head>
 <body>
   <div class="navigation-container">
-    <a href="http://chanwutk.github.io/{repo}/{(number-1):02d}" class="p-btn">prev</a>
-    <a href="http://chanwutk.github.io/{repo}/{(number+1):02d}" class="n-btn">next</a>
+    {f'<a href="http://chanwutk.github.io/{repo}/{(_number-1):02d}" class="p-btn">prev</a>' if number > fr else ''}
+    <a href="http://chanwutk.github.io/{repo}/{(_number+1):02d}" class="n-btn">next</a>
   </div>
   <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
     <a class="a-img" href="https://github.com/chanwutk/{repo}/blob/main/DSCF0{number:02d}0.JPG"><img src="https://github.com/chanwutk/{repo}/blob/main/SMALL-DSCF0{number:02d}0.JPG?raw=true" width=100% height=auto alt=""></a>
@@ -50,21 +51,33 @@ def page(repo: str, number: int):
     <a class="a-img" href="https://github.com/chanwutk/{repo}/blob/main/DSCF0{number:02d}9.JPG"><img src="https://github.com/chanwutk/{repo}/blob/main/SMALL-DSCF0{number:02d}9.JPG?raw=true" width=100% height=auto alt=""></a>
   </div>
   <div class="navigation-container">
-    <a href="http://chanwutk.github.io/{repo}/{(number-1):02d}" class="p-btn">prev</a>
-    <a href="http://chanwutk.github.io/{repo}/{(number+1):02d}" class="n-btn">next</a>
+    <a href="http://chanwutk.github.io/{repo}/{(_number-1):02d}" class="p-btn">prev</a>
+    {f'<a href="http://chanwutk.github.io/{repo}/{(_number-1):02d}" class="p-btn">prev</a>' if number < to else ''}
+  </div>
+  <div>
+    Page {number - fr + 1} of {to - fr + 1}.
   </div>
 </body>
 </html>
 """
 
-os.makedirs("./docs", exist_ok=True)
+def generate(fr: int, to: int):
+    os.makedirs("./docs", exist_ok=True)
 
-first = True
-for i in range(25, 38):
-    if first:
-        with open(f"./docs/index.html", "w") as f:
-            f.write(f'<!DOCTYPE html>\n<html><head><meta http-equiv="refresh" content="0;url={i:02d}.html" /></head></html>')
+    with open(f"./docs/index.html", "w") as f:
+        f.write('<!DOCTYPE html>\n<html><head><meta http-equiv="refresh" content="0;url=01.html" /></head></html>')
 
-    with open(f"./docs/{i:02d}.html", "w") as f:
-        f.write(page('2024-10-20--Firn-Grad-Nakhonsawan', i))
-    first = False
+    for i in range(fr, to + 1):
+
+        with open(f"./docs/{(i - fr + 1):02d}.html", "w") as f:
+            f.write(page('2024-10-20--Firn-Grad-Nakhonsawan', i, fr, to))
+        first = False
+
+# TODO: Currently assume image number not overflowing 9999
+images = [f for f in os.listdir(".") if f.startswith("DSCF") and f.endswith(".JPG")]
+image_numbers = [int(f[len('DSCF'):-len('X.JPG')]) for f in images]
+
+fr = min(image_numbers)
+to = max(image_numbers)
+
+generate(fr, to)
